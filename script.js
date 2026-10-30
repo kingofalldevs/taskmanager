@@ -272,23 +272,25 @@ function openDialog() {
   requestAnimationFrame(() => elements.title.focus());
 }
 
-document.querySelector("#today-date").textContent = today.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" }).toUpperCase();
 document.querySelector("#greeting-date").textContent = dateLabel(today);
 document.querySelector("#footer-year").textContent = today.getFullYear();
 renderWeek();
 render();
 
 document.querySelector("#add-task-button").addEventListener("click", openDialog);
+document.querySelector("#add-task-button-mobile").addEventListener("click", openDialog);
+document.querySelector("#overview-toggle").addEventListener("click", (event) => {
+  const button = event.currentTarget;
+  const expanded = button.getAttribute("aria-expanded") === "true";
+  button.setAttribute("aria-expanded", String(!expanded));
+  button.querySelector("span").textContent = expanded ? "Expand" : "Collapse";
+  document.querySelector("#overview-grid").hidden = expanded;
+});
 document.querySelector("#dialog-close").addEventListener("click", () => elements.dialog.close());
 document.querySelector("#cancel-task").addEventListener("click", () => elements.dialog.close());
 document.querySelectorAll(".filter-tab").forEach((button) => button.addEventListener("click", () => setFilter(button.dataset.filter)));
 elements.search.addEventListener("input", renderList);
 elements.sort.addEventListener("change", renderList);
-
-document.querySelector("#search-toggle").addEventListener("click", () => {
-  elements.search.focus();
-  document.querySelector("#search-field").scrollIntoView({ behavior: "smooth", block: "center" });
-});
 
 document.addEventListener("keydown", (event) => {
   if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
